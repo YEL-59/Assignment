@@ -1,0 +1,44 @@
+Sub webapp()
+
+Dim bot As New WebDriver
+Dim Ks As New Keys
+bot.Start "chrome", "https://web.whatsapp.com/"
+bot.Get "/"
+MsgBox "enter the sq"
+lastrow = Cells(Rows.Count, 1).End(xlUp).Row
+
+
+On Error GoTo errorh:
+mobileno = Selection.Value
+Set myrange = Sheet1.Range("A:A")
+rowno = Application.WorksheetFunction.Match(mobileno, myrange, 0)
+Message = Sheet1.Cells(rowno, 2).Value
+
+ActiveWorkbook.FollowHyperlink Address:="https://wa.me/" & mobileno & "?text=" & Message & ""
+End
+errorh:
+Err.Clear
+MsgBox "Select Proper Mobile Number "
+
+
+For i = 2 To lastrow
+    searchtext = Sheets(1).Range("A" & i).Value
+    textmessage = Sheets(1).Range("B" & i).Value
+    bot.FindElementByXPath("//*[@id='side']/div[1]/div/label/div/div[2]").Click
+    bot.Wait (500)
+    bot.SendKeys (searchtext)
+    bot.Wait (500)
+    bot.SendKeys (Ks.Enter)
+    bot.Wait (500)
+    bot.SendKeys (textmessage)
+    bot.Wait (500)
+    bot.SendKeys (Ks.Enter)
+Next i
+MsgBox "Done :)"
+    
+
+Stop
+
+
+
+End Sub
